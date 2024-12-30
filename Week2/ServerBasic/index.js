@@ -1,9 +1,44 @@
 const express = require("express")
+const zod = require('zod')
 const fs = require("fs")
 const app = express()
 const port = process.env.PORT || 3000
+const schema = zod.array(zod.number())
+var requests = 0
+
+// count the total requests made
+const countRequests = (req,res,next)=>{
+    requests++
+    console.log("Total requests made is ",requests);
+    next()
+}
+const checkResponseTime = (req,res,next)=>{
+    const startTime = Date.now()
+    res.on('finish',()=>{
+        const time = Date.now() - startTime
+        console.log(`Request to ${req.method} ${req.url} took ${time} ms`);
+    })
+    next()
+}
 
 app.use(express.json())
+app.use(validateUser,countRequests,checkResponseTime)
+
+// middleware function
+function validateUser(req,res,next){
+    username = req.query.username
+    password = req.query.password
+    console.log("username ",username);
+    console.log("password ",password);
+    if(username != "username" || password != "password"){
+        res.status(403).json({
+            msg:"Invalid User"
+        })
+    }
+    else{
+        next()
+    }
+}
 
 function calculateSum(n){
     let ans =0
@@ -18,6 +53,7 @@ const user = [
         name:"John",
         kidneys:[
             {healthy:false},
+            {healthy:true},
             {healthy:true}
         ]
     }
@@ -97,24 +133,26 @@ app.get("/listKidneys",(req,res)=>{
 
 // delete all the unhealthy kidneys
 app.delete("/unhealthyKidney", (req,res)=>{
-    if(user[0].kidneys.some(kidney=>kidney.healthy)){
+    if(user[0].kidneys.some(kidney=>kidney.healthy==false)){
+        const newKidneys = []
+        for (let i = 0; i<user[0].kidneys.length; i++){
+            if(user[0].kidneys[i].healthy){
+                newKidneys.push({
+                    healthy:true
+                })
+            }
+        }
+        
+        user[0].kidneys=newKidneys
+        res.json({
+            msg: "Success"
+        })
+    }
+    else{
         res.status(411).json({
             msg:"No unhealthy kidneys present!"
         })
     }
-    const newKidneys = []
-    for (let i = 0; i<user[0].kidneys.length; i++){
-        if(user[0].kidneys[i].healthy){
-            newKidneys.push({
-                healthy:true
-            })
-        }
-    }
-
-    user[0].kidneys=newKidneys
-    res.json({
-        msg: "Success"
-    })
 })
 
 // read the content of the specified file
@@ -152,6 +190,37 @@ app.get("/readFileNames/:dirName",(req,res)=>{
         res.status(200).json({
             data
         })
+    })
+})
+
+
+// api endpoint that uses the above middleware
+app.get("/greetMe", (req,res)=>{
+    res.json({
+        msg:"Hello, Have a nice day."
+    })
+})
+
+// using zod validation
+app.post("/health-checkup",(req,res)=>{
+    const kidneys = req.body.kidney
+    const result = schema.safeParse(kidneys)
+    if(!result.success){
+        res.json({
+            msg:"Invalid Input"
+        })
+    }
+    else{
+        res.json({
+            result
+        })
+    }
+})
+
+// global catch[
+app.use((err,req,res,next)=>{
+    res.json({
+        msg: "Oops something went wrong."
     })
 })
 
