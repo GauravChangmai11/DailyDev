@@ -6,12 +6,27 @@ const port = process.env.PORT || 3000
 const schema = zod.array(zod.number())
 var requests = 0
 
+// zod object schema
+const objectSchema = zod.object({
+    email: zod.string().email(),
+    password: zod.string().min(5),
+    country: zod.literal("IN").or(zod.literal("US")),
+    kidneys: zod.array(zod.number())
+})
+
+// function using zod object schema
+const validateObject = (object)=>{
+    return objectSchema.safeParse(object)
+}
+
 // count the total requests made
 const countRequests = (req,res,next)=>{
     requests++
     console.log("Total requests made is ",requests);
     next()
 }
+
+// count the response time for the api call made (async)
 const checkResponseTime = (req,res,next)=>{
     const startTime = Date.now()
     res.on('finish',()=>{
@@ -213,6 +228,24 @@ app.post("/health-checkup",(req,res)=>{
     else{
         res.json({
             result
+        })
+    }
+})
+
+// zod validation object
+app.get("/validate-object",(req,res)=>{
+    const object = req.body
+    const result = validateObject(object)
+    if(result.success){
+        res.json({
+            msg:"Success",
+            response:result
+        })
+    }
+    else{
+        res.json({
+            msg:"Failed",
+            response:result
         })
     }
 })
