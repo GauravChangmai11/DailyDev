@@ -11,7 +11,7 @@ const emailSchema = zod.string().email()
 const passwordSchema = zod.string().min(5)
 
 try{
-    mongoose.connect("mongodb+srv://user123:XSj6zEFxDnhPU9LT@mongocluster.bbr17.mongodb.net/user_app")
+    mongoose.connect("")
 }
 catch(err){
     console.error("Error connecting to the database");
