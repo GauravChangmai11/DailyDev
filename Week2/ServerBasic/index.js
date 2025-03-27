@@ -1,5 +1,6 @@
 const express = require("express")
 const zod = require('zod')
+const cors = require('cors')
 const fs = require("fs")
 const app = express()
 const port = process.env.PORT || 3000
@@ -22,7 +23,7 @@ const validateObject = (object)=>{
 // count the total requests made
 const countRequests = (req,res,next)=>{
     requests++
-    console.log("Total requests made is ",requests);
+    // console.log("Total requests made is ",requests);
     next()
 }
 
@@ -31,11 +32,11 @@ const checkResponseTime = (req,res,next)=>{
     const startTime = Date.now()
     res.on('finish',()=>{
         const time = Date.now() - startTime
-        console.log(`Request to ${req.method} ${req.url} took ${time} ms`);
+        // console.log(`Request to ${req.method} ${req.url} took ${time} ms`);
     })
     next()
 }
-
+app.use(cors())
 app.use(express.json())
 app.use(validateUser,countRequests,checkResponseTime)
 
@@ -43,8 +44,8 @@ app.use(validateUser,countRequests,checkResponseTime)
 function validateUser(req,res,next){
     username = req.query.username
     password = req.query.password
-    console.log("username ",username);
-    console.log("password ",password);
+    // console.log("username ",username);
+    // console.log("password ",password);
     if(username != "username" || password != "password"){
         res.status(403).json({
             msg:"Invalid User"
@@ -81,8 +82,8 @@ app.get("/",(req,res)=>{
 
 // basic request with query data and response
 app.get("/sum",(req,res)=>{
-    console.log("checkpoint")
-    console.log(calculateSum(5))
+    // console.log("checkpoint")
+    // console.log(calculateSum(5))
     let num = req.query.num
     if(!num || isNaN(num)){
         res.send("Invalid input")
@@ -100,22 +101,22 @@ app.get("/age",(req,res)=>{
 app.get("/sendJson",(req,res)=>{
     res.json({
         name:"Anil Kapoor",
-        age: 22
+        requestCount: requests
     })
 })
 
 // request is sending headers
 app.post("/sendingHeaders",(req,res)=>{
-    console.log(req.headers["header1"])
-    console.log(req.body)
+    // console.log(req.headers["header1"])
+    // console.log(req.body)
     res.send("Received")
 })
 
 // sending a kidney via query param not param
 app.post("/sendingKidney",(req,res)=>{
     let kidney = req.query.kidney
-    console.log("req params",req.params)
-    console.log("kidney received as ",kidney)
+    // console.log("req params",req.params)
+    // console.log("kidney received as ",kidney)
     user[0].kidneys.push({
         healthy: kidney
     })
@@ -125,8 +126,8 @@ app.post("/sendingKidney",(req,res)=>{
 // sending data as param
 app.get("/user/:name",(req,res)=>{
     let nameObj = req.params.name
-    console.log("nameObj ", nameObj)
-    console.log("name received as param is ", nameObj)
+    // console.log("nameObj ", nameObj)
+    // console.log("name received as param is ", nameObj)
     res.send("received")
 })
 
@@ -159,7 +160,7 @@ app.delete("/unhealthyKidney", (req,res)=>{
         }
         
         user[0].kidneys=newKidneys
-        console.log("user ",user[0].kidneys);
+        // console.log("user ",user[0].kidneys);
         res.json({
             msg: "Success"
         })
@@ -174,8 +175,8 @@ app.delete("/unhealthyKidney", (req,res)=>{
 // read the content of the specified file
 app.get("/readFile/:fileName",(req,res)=>{
     const fileName = req.params.fileName
-    console.log(fileName);
-    console.log(fs.existsSync(fileName));
+    // console.log(fileName);
+    // console.log(fs.existsSync(fileName));
     if (fs.existsSync(fileName)){
             fs.readFile(fileName,"utf8",(err,data)=>{
                 if(err){
@@ -196,7 +197,7 @@ app.get("/readFile/:fileName",(req,res)=>{
 // read the names of all the files in the specified directory
 app.get("/readFileNames/:dirName",(req,res)=>{
     const dirName = req.params.dirName
-    console.log(dirName);
+    // console.log(dirName);
     fs.readdir(dirName,(err,data)=>{
         if(err){
             res.status(400).json({

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function changeBtnName(){
+            document.getElementById("btn").innerHTML="Great"
+        }
+
+        async function makeBackendCall(){
+            const res = await fetch("https://daily-dev-gaurav-changmais-projects.vercel.app/sendJson?username=username&password=password",{
+                method: 'GET'
+            }
+            )
+            const data = await res.json()
+            document.getElementById("bckRes").innerHTML="Name is " + data.name + " and number of request made is " + data.requestCount
+        }
+    </script>
+</head>
+<body>
+    <h1>Hello, You've deployed the client</h1>
+    <button id="btn" onclick="changeBtnName()">Congratulate Yourself?</button>
+    <button onclick="makeBackendCall()">Click Me to get a JSON from backend.</button>
+    <div id="bckRes"></div>
+</body>
+</html>
