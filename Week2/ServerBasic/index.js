@@ -76,7 +76,7 @@ const user = [
 
 // base route
 app.get("/",(req,res)=>{
-    res.send("hello world")
+    res.send("Congrats you are connected.")
 })
 
 // basic request with query data and response
@@ -159,6 +159,7 @@ app.delete("/unhealthyKidney", (req,res)=>{
         }
         
         user[0].kidneys=newKidneys
+        console.log("user ",user[0].kidneys);
         res.json({
             msg: "Success"
         })
