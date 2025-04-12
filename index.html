@@ -9,13 +9,19 @@
             document.getElementById("btn").innerHTML="Great"
         }
 
+        let timer;
         async function makeBackendCall(){
-            const res = await fetch("https://daily-dev-gaurav-changmais-projects.vercel.app/sendJson?username=username&password=password",{
-                method: 'GET'
+            if(timer){
+                console.log("inside timer ",timer);
+                clearTimeout(timer)
             }
-            )
-            const data = await res.json()
-            document.getElementById("bckRes").innerHTML="Name is " + data.name + " and number of request made is " + data.requestCount
+            timer = setTimeout(async ()=>{
+                let res = await fetch("https://daily-dev-gaurav-changmais-projects.vercel.app/sendJson?username=username&password=password",{method: 'GET'})
+                if(res){
+                    const data = await res.json()
+                    document.getElementById("bckRes").innerHTML="Name is " + data.name + " and number of request made is " + data.requestCount
+                }
+            },3000)
         }
     </script>
 </head>
