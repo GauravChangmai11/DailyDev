@@ -45,7 +45,7 @@ function App() {
       )}
 
       <Wrapper>
-        <div>hello world</div>
+        <div>{title}</div>
       </Wrapper>
       <Wrapper>
         hi
@@ -74,7 +74,7 @@ const Todo=React.memo(function Todo({todo}){
 
 const Wrapper = ({children})=>{
   return(
-    <div style={{border:"2px solid black", padding:"14px"}}>
+    <div style={{backgroundColor:"pink", padding:"14px"}}>
       {children}
     </div>
   )

@@ -15,6 +15,8 @@ const objectSchema = zod.object({
     kidneys: zod.array(zod.number())
 })
 
+const todoSchema = zod.number({required_error:"Todo ID is required.", invalid_type_error: "Todo ID must be a valid number"}).int("Todo ID must be an integer.")
+
 // function using zod object schema
 const validateObject = (object)=>{
     return objectSchema.safeParse(object)
@@ -75,11 +77,43 @@ const user = [
     }
 ]
 
+const todos = [
+    {
+        id:1,
+        title: "Go Hit Gym",
+        desc: "Stay fit"
+    },
+    {
+        id:2,
+        title: "Code",
+        desc: "Get better"
+    },
+    {
+        id:3,
+        title: "Manifest",
+        desc: "Its already possible you just need to believe it."
+    }
+]
+
 // base route
 app.get("/",(req,res)=>{
     res.send("Congrats you are connected.")
 })
 
+app.get("/getTodo",(req,res)=>{
+    const ID = req.query.id
+    const checkId  = todoSchema.safeParse(ID)
+    if(checkId.success){
+        res.status(200).json({
+            success: true,
+            data: todos[ID]
+        })
+    }
+    res.status(404).json({
+            success: false,
+            data: []
+    })
+})
 // basic request with query data and response
 app.get("/sum",(req,res)=>{
     // console.log("checkpoint")
