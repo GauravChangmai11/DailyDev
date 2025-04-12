@@ -15,7 +15,7 @@ const objectSchema = zod.object({
     kidneys: zod.array(zod.number())
 })
 
-const todoSchema = zod.number({required_error:"Todo ID is required.", invalid_type_error: "Todo ID must be a valid number"}).int("Todo ID must be an integer.")
+const todoSchema = zod.number({required_error:"Todo ID is required.", invalid_type_error: "Todo ID must be a valid number"}).int()
 
 // function using zod object schema
 const validateObject = (object)=>{
@@ -101,12 +101,16 @@ app.get("/",(req,res)=>{
 })
 
 app.get("/getTodo",(req,res)=>{
-    const ID = req.query.id
+    const ID = parseInt(req.query.id)
     const checkId  = todoSchema.safeParse(ID)
+    console.log("id ",ID);
+    console.log("typeof id ",typeof ID);
+    console.log("checkId ",checkId);
     if(checkId.success){
+        let resData = todos.filter((todo)=>todo.id===checkId.data)
         res.status(200).json({
             success: true,
-            data: todos[ID]
+            data: resData
         })
     }
     res.status(404).json({
