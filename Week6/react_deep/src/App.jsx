@@ -2,8 +2,7 @@ import React, { useEffect } from 'react'
 import { useState } from 'react'
 import Header2 from "./components/Header"
 import TodoItem from './components/Todo'
-
-import './App.css'
+import Assignment2 from './components/Assignment2'
 
 function App() {
   const [title, setTitle] = useState("Hello World")
@@ -59,6 +58,7 @@ function App() {
       <Wrapper>
         hi
       </Wrapper>
+      <Assignment2/>
     </>
   )
 }

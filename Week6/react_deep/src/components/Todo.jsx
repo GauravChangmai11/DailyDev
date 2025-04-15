@@ -11,7 +11,7 @@ export default function TodoItem({id}){
     // not recommended to make such an async call inside useEffect like this one.
     useEffect(()=>{
         const fetchData = async ()=>{
-            const res = await fetch(`http://localhost:3000/getTodo?id=${id}&username=username&password=password`,{method:"GET"})
+            const res = await fetch(`https://daily-dev-gaurav-changmais-projects.vercel.app/getTodo?id=${id}&username=username&password=password`,{method:"GET"})
             const parsedRes = await res.json()
             if(parsedRes.data){
                 setTodo(parsedRes.data[0])
