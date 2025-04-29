@@ -6,6 +6,7 @@ export default function UserDetails(){
     return(
         <div>
             Hello There {name}
+            
         </div>
     )
 }

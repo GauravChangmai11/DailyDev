@@ -17,7 +17,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
-          <UserContext.Provider value={{name, address}}>
+          <UserContext.Provider value={{name, address, setName, setAddress}}>
         <AppNavigation/>
         <Routes>
             <Route path='/' element={<Suspense fallback={"Loading User Details ..."}><LazyUserDetails name={"Raju"}/></Suspense>}/>

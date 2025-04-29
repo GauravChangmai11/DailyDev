@@ -103,9 +103,9 @@ app.get("/",(req,res)=>{
 app.get("/getTodo",(req,res)=>{
     const ID = parseInt(req.query.id)
     const checkId  = todoSchema.safeParse(ID)
-    console.log("id ",ID);
-    console.log("typeof id ",typeof ID);
-    console.log("checkId ",checkId);
+    // console.log("id ",ID);
+    // console.log("typeof id ",typeof ID);
+    // console.log("checkId ",checkId);
     if(checkId.success){
         let resData = todos.filter((todo)=>todo.id===checkId.data)
         res.status(200).json({
